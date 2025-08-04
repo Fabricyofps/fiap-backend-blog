@@ -19,8 +19,6 @@ COPY --from=builder /usr/app/dist ./dist
 COPY --from=builder /usr/app/package.json ./package.json
 COPY --from=builder /usr/app/node_modules ./node_modules
 
-COPY .env.development /usr/app/.env
-
-EXPOSE $PORT
+EXPOSE 3000
 
 CMD ["node", "dist/main"]
