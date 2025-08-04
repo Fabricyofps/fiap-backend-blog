@@ -1,0 +1,25 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build and Push Docker Image
+      run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker build -t $DOCKER_USERNAME/fabricyofps/blog-backend:latest --build-arg BLOG_MONGO_URI=${{ secrets.BLOG_MONGO_URI }} --build-arg BLOG_JWT_SECRET=${{ secrets.BLOG_JWT_SECRET }} .
+          docker push $DOCKER_USERNAME/blog-backend:$(date +%s)
