@@ -31,4 +31,4 @@ jobs:
 
     - name: Push Docker Image
       run: |
-        docker push $DOCKER_USERNAME/fabricyofps/blog-backend:latest
+        docker push $DOCKER_USERNAME/blog-backend:latest
