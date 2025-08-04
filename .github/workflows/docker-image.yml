@@ -7,19 +7,28 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      BLOG_MONGO_URI: ${{ secrets.BLOG_MONGO_URI }}
+      BLOG_JWT_SECRET: ${{ secrets.BLOG_JWT_SECRET }}
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build and Push Docker Image
+
+    - name: Login to Docker Hub
+      run: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+
+    - name: Build Docker Image
       run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker build -t $DOCKER_USERNAME/fabricyofps/blog-backend:latest --build-arg BLOG_MONGO_URI=${{ secrets.BLOG_MONGO_URI }} --build-arg BLOG_JWT_SECRET=${{ secrets.BLOG_JWT_SECRET }} .
-          docker push $DOCKER_USERNAME/blog-backend:$(date +%s)
+        docker build \
+          --build-arg BLOG_MONGO_URI="$BLOG_MONGO_URI" \
+          --build-arg BLOG_JWT_SECRET="$BLOG_JWT_SECRET" \
+          -t $DOCKER_USERNAME/fabricyofps/blog-backend:latest .
+
+    - name: Push Docker Image
+      run: |
+        docker push $DOCKER_USERNAME/fabricyofps/blog-backend:latest
