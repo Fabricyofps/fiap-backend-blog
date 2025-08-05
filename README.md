@@ -1,98 +1,159 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Blog Backend - Tech Challenge
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Este projeto é um backend para um blog, desenvolvido em **NestJS**, com autenticação JWT, monitoração com **Prometheus**/**Grafana**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🌐 Tecnologias Utilizadas
 
-## Description
+- **Node.js** + **NestJS**
+- **MongoDB**
+- **Docker** + **Docker Compose**
+- **Prometheus** + **Grafana**
+- **Swagger**
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## ✅ Funcionalidades Principais
 
-```bash
-$ npm install
+- CRUD de Posts
+- Autenticação JWT
+- Permissões por perfil (Aluno / Professor)
+- Monitoramento via Prometheus/Grafana
+- Documentação via Swagger
+
+---
+
+## 📂 Estrutura de Diretórios
+
+```
+├── src
+│   ├── auth/                # Autenticação e JWT
+│   ├── users/               # Serviços de usuários
+│   ├── posts/               # CRUD de posts
+│   ├── shared/              # Filtros, pipes, guards reutilizáveis
+│   ├── app.module.ts
+│   ├── main.ts              # Ponto de entrada da aplicação
+├── docker-compose.yml      # Orquestração dos containers
+├── Dockerfile              # Build da aplicação Node
+├── .env                    # Variáveis de ambiente
+├── grafanaDashboard.json   # Dashboard do Grafana para importação
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## 📁 Configuração do .env
 
-# watch mode
-$ npm run start:dev
+Crie um arquivo `.env` na raiz com o seguinte conteúdo:
 
-# production mode
-$ npm run start:prod
+```env
+PORT=3010
+BLOG_MONGO_URI=mongodb://mongo:27017/blog
+BLOG_JWT_SECRET=sua_chave_secreta_aqui
 ```
 
-## Run tests
+---
+
+## 🚰 Instruções para rodar com Docker Compose
+
+### 1. Subir os containers
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker-compose up --build
 ```
 
-## Deployment
+Esse comando:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- Faz o build da aplicação
+- Sobe o MongoDB
+- Inicia o Prometheus, Grafana e o backend da aplicação
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 2. Acessos aos serviços
+
+| Serviço       | URL                                                    |
+| ------------- | ------------------------------------------------------ |
+| API (Swagger) | [http://localhost:3010/api](http://localhost:3010/api) |
+| MongoDB       | localhost:27017                                        |
+| Grafana       | [http://localhost:3000](http://localhost:3000)         |
+| Prometheus    | [http://localhost:9090](http://localhost:9090)         |
+
+### 3. Configuração do Grafana
+
+- **Login inicial**: `admin / admin`
+- **Datasource**: adicione o Prometheus com a URL: `http://prometheus:9090`
+- **Importar Dashboard**:
+  - Clique em _"Import Dashboard"_
+  - Selecione o arquivo `grafanaDashboard.json`
+
+---
+
+## 🔍 Swagger (Documentação de API)
+
+Disponível em: [http://localhost:3010/api](http://localhost:3010/api)
+
+Inclui:
+
+- Endpoints para autenticação
+- Cadastro e login de usuários
+- CRUD de posts com roles
+
+---
+
+## 👁️ Observabilidade
+
+### Prometheus
+
+Coleta métricas de performance da aplicação.
+
+### Grafana
+
+Apresenta os dados do Prometheus em dashboards interativos.
+
+- Host Prometheus: `http://prometheus:9090`
+- Dashboard: importar `grafanaDashboard.json`
+
+---
+
+## ⚙️ Comandos úteis
+
+### Instalar dependências:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Rodar localmente (sem Docker):
 
-## Resources
+```bash
+npm run start:dev
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Rodar testes:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm run test:cov
+```
 
-## Support
+### Lint:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run lint
+```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 🛠 Arquivos importantes
 
-## License
+| Arquivo                 | Descrição                                  |
+| ----------------------- | ------------------------------------------ |
+| `main.ts`               | Ponto de entrada da aplicação NestJS       |
+| `Dockerfile`            | Docker build com etapas de build e runtime |
+| `docker-compose.yml`    | Orquestra Mongo, App, Grafana e Prometheus |
+| `.env.development`      | Configuração de variáveis sensíveis        |
+| `grafanaDashboard.json` | Dashboard para importação no Grafana       |
+| `src/shared/filters/`   | Filtros globais (como HttpExceptionFilter) |
+| `src/auth/guards/`      | Guards de autenticação JWT                 |
+| `src/users/`            | Registros e autenticação de usuários       |
+| `src/posts/`            | CRUD de Posts                              |
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+Feito com ❤️ no Tech Challenge.
